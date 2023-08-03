@@ -9,7 +9,12 @@ import { useEventListener } from "./machinery/useEventListener";
  * }}
  * @returns {{ 
  *  subtitles: VTTCue[], 
- *  current: { text: string, name: string }
+ *  current: { 
+ *    text: string, 
+ *    voice: string,
+ *    startTime: string,
+ *    endTime: string
+ *  }
  * }} 
  */
 export function useSubtitles({
@@ -41,7 +46,7 @@ export function useSubtitles({
       (x) => x.language === language
     );
 
-    if (currentTrack.language === language) {
+    if (currentTrack?.language === language) {
       void currentTrack.addEventListener("cuechange", onCueChangeEvent);
       currentTrack.mode = "hidden";
 
@@ -68,21 +73,23 @@ export function useSubtitles({
     toIterable(cues).forEach((x) => {
       setCurrentSubtitle({
         text: x.getCueAsHTML().textContent,
-        name: mapSpeakersToIdentifiers(x)
+        voice: getVoiceFromCue(x.text),
+        startTime: x.startTime,
+        endTime: x.endTime
       });
     });
-  }
-
-  /** @param {VTTCue} x - incoming cue */
-  function mapSpeakersToIdentifiers(x) {
-    const match = /(<v (?<name>.+?)>)/.exec(x?.text);
-    return match ? `${match?.groups?.name}` : null;
   }
 
   return {
     subtitles: memoizedSubtitles,
     current: currentSubtitle
   };
+}
+
+/** @param {{ text: string }} */
+function getVoiceFromCue({ text ) {
+  const match = /(<v (?<name>.+?)>)/.exec(text);
+  return match ? `${match?.groups?.name}` : null;
 }
 
 /** @param {TextTrackCueList} x */
