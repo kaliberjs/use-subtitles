@@ -92,13 +92,17 @@ The hook returns and object with;
 
 Here's an overview of what these keys contain:
 
+---
+
 #### `subtitles`
 Forwards all keys from the subtitle track as [VTTCue](https://developer.mozilla.org/en-US/docs/Web/API/VTTCue)'s, which inherits from [TextTrackCues](https://developer.mozilla.org/en-US/docs/Web/API/TextTrackCue).
+
+---
 
 #### `current`
 | Key | Description |
 | --- | ----------- |
-| `text` | Returns the current `text` (including any [markup tags](https://www.w3.org/TR/webvtt1/#webvtt-internal-node-object) it main contain), and the name (through the `voice`-tag) of the current speaker. | 
+| `text` | Returns the current `text` (including any [markup tags](https://www.w3.org/TR/webvtt1/#webvtt-internal-node-object) it main contain). | 
 | `voice` | The name of the current speaker (called `voice` in `WebVTT`). |
 | `startTime` | The start time of the current cue. | 
 | `endTime` | The end time of the current cue. |
