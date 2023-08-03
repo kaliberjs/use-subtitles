@@ -114,7 +114,7 @@ Here's a quick glance at a `WebVTT` file.
 | Kind | Description |
 | ---- | ----------- |
 | `00:00:00.000 --> 00:00:20.000` | Timestamp. Outputted under `current.startTime` and `currrent.endTime`, and available for all cues in the `subtitles` array. |
-| `<v Name>` | `voice`-tag. Outputted by hook under `current.speaker`. |
+| `<v Fred>` | `voice`-tag. Outputted by hook under `current.speaker`. |
 | `Hi, my name is Fred` | The `text`, available under `current.text`, and available for all cues in the `subtitles` array as `text`. |
 
 ```vtt
