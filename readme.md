@@ -1,7 +1,3 @@
-# BEFORE YOU PUBLISH
-- Read [Libraries van Kaliber](https://docs.google.com/document/d/1FrJi-xWtKkbocyMVK5A5_hupjl5E4gD4rDvATDlxWyc/edit#heading=h.bb3md3gyf493).
-- Make sure your example works.
-
 # `@kaliber/use-subtitles`
 Easily consume your video elements' WebVTT subtitles in React.
 
@@ -95,7 +91,7 @@ Here's an overview of what these keys contain:
 ---
 
 #### `subtitles`
-Forwards all keys from the subtitle track as [VTTCue](https://developer.mozilla.org/en-US/docs/Web/API/VTTCue)'s, which inherits from [TextTrackCues](https://developer.mozilla.org/en-US/docs/Web/API/TextTrackCue).
+Forwards all keys from the subtitle track as [VTTCue](https://developer.mozilla.org/en-US/docs/Web/API/VTTCue)'s, which inherits from [TextTrackCues](https://developer.mozilla.org/en-US/docs/Web/API/TextTrackCue). Read more about [VTTCue](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API#vttcue)'s at MDN.
 
 ---
 
@@ -144,6 +140,7 @@ WEBVTT
 ### Use `video` over `audio`
 The support for using `track` as a child element in `video` is better than it is for `audio`.
 
+---
 
 ![](https://media.giphy.com/media/kKJ8YFi1VVhHFudiz2/giphy.gif)
 
