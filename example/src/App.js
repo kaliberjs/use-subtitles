@@ -1,5 +1,5 @@
-import { hello }  from '@kaliber/library'
+import { useSubtitles }  from '@kaliber/use-subtitles'
 
 export default function App() {
-  return <div>{hello()}</div>
+  return <div>{useSubtitles()}</div>
 }

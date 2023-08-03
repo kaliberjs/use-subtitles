@@ -1,5 +1,5 @@
 {
-  "name": "@kaliber/library",
+  "name": "@kaliber/use-subtitles",
   "version": "1.0.0",
   "main": "index.js",
   "sideEffects": false,
@@ -7,7 +7,8 @@
     "access": "public"
   },
   "keywords": [
-    "hello"
+    "WebVTT",
+    "use-subtitles"
   ],
   "files": [
     "index.js",
