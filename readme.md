@@ -81,14 +81,14 @@ function Component() {
 ## Parameters
 | Name          | Type          | Description   |
 | ------------- | ------------- | ------------- |
-| `player`      | `HTMLVideoElement | HTMLAudioElement` | A native audio or video element. Can also be supplied from an underlaying element in a third party player like `ReactPlayer` (e.g. through the use of the `getInternalPlayer()` method). |
+| `player`      | `HTMLVideoElement \| HTMLAudioElement` | A native audio or video element. Can also be supplied from an underlaying element in a third party player like `ReactPlayer` (e.g. through the use of the `getInternalPlayer()` method). |
 | `language`  | `string`  | Expects a language code that matches the `track` language.  |
-| `onPlayerAvailable`  | `(HTMLVideoElement | HTMLAudioElement) => void`  | A callback to indicate the `player` is available; can you used to `load()` a native `video` element. |
+| `onPlayerAvailable`  | `(HTMLVideoElement \| HTMLAudioElement) => void`  | A callback to indicate the `player` is available; can you used to `load()` a native `video` element. |
 
 ## Return values
 | Name          | Type          | Description   |
 | ------------- | ------------- | ------------- |
-| `subtitles`   | `(HTMLVideoElement | HTMLAudioElement)[]` | An array of all cues from the subtitle in the currently selected language. |
+| `subtitles`   | `(HTMLVideoElement \| HTMLAudioElement)[]` | An array of all cues from the subtitle in the currently selected language. |
 | `current`  | `{ text: string, name: string }` | Returns the current `text` (including any markup tags it main contain), and the name (throug the `voice`-tag) of the current speaker. |
 
 ## Tips & Gotcha's
