@@ -86,10 +86,22 @@ function Component() {
 | `onPlayerAvailable`  | `(HTMLVideoElement \| HTMLAudioElement) => void`  | A callback to indicate the `player` is available; can you used to `load()` a native `video` element. |
 
 ## Return values
-| Name          | Type          | Description   |
-| ------------- | ------------- | ------------- |
-| `subtitles`   | `(HTMLVideoElement \| HTMLAudioElement)[]` | An array of all cues from the subtitle in the currently selected language. |
-| `current`  | `{ text: string, name: string }` | Returns the current `text` (including any [markup tags](https://www.w3.org/TR/webvtt1/#webvtt-internal-node-object) it main contain), and the name (through the `voice`-tag) of the current speaker. |
+The hook returns and object with;
+- **`subtitles`** (an array with all subtitles)
+- **`current`** (only the current subtitle)
+
+Here's an overview of what these keys contain:
+
+#### `subtitles`
+Forwards all keys from the subtitle track as [VTTCue](https://developer.mozilla.org/en-US/docs/Web/API/VTTCue)'s, which inherits from [TextTrackCues](https://developer.mozilla.org/en-US/docs/Web/API/TextTrackCue).
+
+#### `current`
+| Key | Description |
+| --- | ----------- |
+| `text` | Returns the current `text` (including any [markup tags](https://www.w3.org/TR/webvtt1/#webvtt-internal-node-object) it main contain), and the name (through the `voice`-tag) of the current speaker. | 
+| `voice` | The name of the current speaker (called `voice` in `WebVTT`). |
+| `startTime` | The start time of the current cue. | 
+| `endTime` The end time of the current cue. |
 
 ## WebVTT
 Here's a quick glance at a `WebVTT` file.
@@ -97,8 +109,9 @@ Here's a quick glance at a `WebVTT` file.
 
 | Kind | Description |
 | ---- | ----------- |
-| `00:00:00.000 --> 00:00:20.000` | Timestamp. |
+| `00:00:00.000 --> 00:00:20.000` | Timestamp. Outputted under `current.startTime` and `currrent.endTime`, and available for all cues in the `subtitles` array. |
 | `<v Name>` | `voice`-tag. Outputted by hook under `current.speaker`. |
+| `Hi, my name is Fred` | The `text`, available under `current.text`, and available for all cues in the `subtitles` array as `text`. |
 
 ```vtt
 WEBVTT
