@@ -101,7 +101,7 @@ Forwards all keys from the subtitle track as [VTTCue](https://developer.mozilla.
 | `text` | Returns the current `text` (including any [markup tags](https://www.w3.org/TR/webvtt1/#webvtt-internal-node-object) it main contain), and the name (through the `voice`-tag) of the current speaker. | 
 | `voice` | The name of the current speaker (called `voice` in `WebVTT`). |
 | `startTime` | The start time of the current cue. | 
-| `endTime` The end time of the current cue. |
+| `endTime` | The end time of the current cue. |
 
 ## WebVTT
 Here's a quick glance at a `WebVTT` file.
