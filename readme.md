@@ -2,11 +2,10 @@
 Easily consume your video elements' WebVTT subtitles in React.
 
 ## Motivation
-WebVTT subtitles are lovely! However; 
-- the default styling (through CSS) is hard to get right across all browsers
-- it's hard to interface with the subtitles from JavaScript code
-
-This hook aims to make that easier for you.
+WebVTT subtitles are a great feature, but they come with some difficulties:
+- Styling the subtitles with CSS to achieve a consistent look across browsers can be challenging.
+Interfacing with the subtitles from JavaScript code is not straightforward.
+- This hook aims to make that easier for you.
 
 ## Installation
 
@@ -19,7 +18,8 @@ yarn add @kaliber/use-subtitles
 When working with `@kaliber/build`, add `@kaliber/use-subtitles` to your `compileWithBabel` array. 
 
 ## Usage
-Short example. If your library has multiple ways to use it, show the most used one and refer to `/example` for further examples.
+Here's a short example demonstrating the most common use case:
+Look at the `/example` directory for further examples.
 
 ```jsx
 import { useSubtitles } from '@kaliber/use-subtitles'
@@ -42,7 +42,7 @@ function Component() {
 ```
 
 ## Usage with `ReactPlayer`
-`use-subtitles` aims to be player-agnostic; as long as you provide the underlaying `HTMLVideoPlayer` of your dependency, the library intends to work.
+`use-subtitles` is designed to be player-agnostic. As long as you provide the underlying `HTMLVideoPlayer` of your dependency, the library should work seamlessly.
 
 ```jsx
 import { useSubtitles } from '@kaliber/use-subtitles'
@@ -75,6 +75,8 @@ function Component() {
 ```
 
 ## Parameters
+The hook accepts the following parameters:
+
 | Name          | Type          | Description   |
 | ------------- | ------------- | ------------- |
 | `player`      | `HTMLVideoElement \| HTMLAudioElement` | A native audio or video element. Can also be supplied from an underlaying element in a third party player like `ReactPlayer` (e.g. through the use of the `getInternalPlayer()` method). |
@@ -82,20 +84,14 @@ function Component() {
 | `onPlayerAvailable`  | `(HTMLVideoElement \| HTMLAudioElement) => void`  | A callback to indicate the `player` is available; can you used to `load()` a native `video` element. |
 
 ## Return values
-The hook returns and object with;
-- **`subtitles`** (an array with all subtitles)
-- **`current`** (only the current subtitle)
-
-Here's an overview of what these keys contain:
-
----
+The hook returns and object with two keys:
 
 #### `subtitles`
-Forwards all keys from the subtitle track as [VTTCue](https://developer.mozilla.org/en-US/docs/Web/API/VTTCue)'s, which inherits from [TextTrackCues](https://developer.mozilla.org/en-US/docs/Web/API/TextTrackCue). Read more about [VTTCue](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API#vttcue)'s at MDN.
-
----
+An array containing all the subtitles. Each subtitle is represented as a [VTTCue](https://developer.mozilla.org/en-US/docs/Web/API/VTTCue) object, which inherits from [TextTrackCues](https://developer.mozilla.org/en-US/docs/Web/API/TextTrackCue). You can read more about [VTTCue](https://developer.mozilla.org/en-US/docs/Web/API/VTTCue) at MDN.
 
 #### `current`
+An object representing the current subtitle being displayed. It includes the following properties:
+
 | Key | Type | Description |
 | --- | ---- | ----------- |
 | `text` | `string` | Returns the current `text` (including any [markup tags](https://www.w3.org/TR/webvtt1/#webvtt-internal-node-object) it main contain). | 
@@ -104,14 +100,7 @@ Forwards all keys from the subtitle track as [VTTCue](https://developer.mozilla.
 | `endTime` | `number` | The end time of the current cue. |
 
 ## WebVTT
-Here's a quick glance at a `WebVTT` file.
-`use-subtitles` extracts some of the available data from the cues. Here's an overview of _what_ it extracts, and how that is returned.
-
-| Kind | Description |
-| ---- | ----------- |
-| `00:00:00.000 --> 00:00:20.000` | Timestamp. Outputted under `current.startTime` and `currrent.endTime`, and available for all cues in the `subtitles` array. |
-| `<v Fred>` | `voice`-tag. Outputted by hook under `current.speaker`. |
-| `Hi, my name is Fred` | The `text`, available under `current.text`, and available for all cues in the `subtitles` array as `text`. |
+A WebVTT file typically looks like this: 
 
 ```vtt
 WEBVTT
@@ -134,6 +123,15 @@ WEBVTT
 00:00:12.500 --> 00:00:32.500
 <v Fred>OK, let’s go.
 ```
+
+#### Extracted properties
+`use-subtitles` extracts some of the available data from the cues. Here's an overview of _what_ it extracts, and how that is returned.
+
+| Kind | Description |
+| ---- | ----------- |
+| `00:00:00.000 --> 00:00:20.000` | Timestamp. Outputted under `current.startTime` and `currrent.endTime`, and available for all cues in the `subtitles` array. |
+| `<v Fred>` | `voice`-tag. Outputted by hook under `current.speaker`. |
+| `Hi, my name is Fred` | The `text`, available under `current.text`, and available for all cues in the `subtitles` array as `text`. |
 
 ## Tips & Gotcha's
 
