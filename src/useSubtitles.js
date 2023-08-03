@@ -1,17 +1,27 @@
 import { useEvent } from "./machinery/useEvent";
 import { useEventListener } from "./machinery/useEventListener";
 
-/** @returns {{ subtitles: VTTCue[], current: { text: string, name: string }}} */
+/** 
+ * @param {{ 
+ *  player: (HTMLVideoElement | HTMLAudioElement), 
+ *  language: string, 
+ *  onPlayerAvailable: (player: (HTMLVideoElement | HTMLAudioElement)) => void 
+ * }}
+ * @returns {{ 
+ *  subtitles: VTTCue[], 
+ *  current: { text: string, name: string }
+ * }} 
+ */
 export function useSubtitles({
   player,
   language = "nl",
-  onPlayerReady = noop
+  onPlayerAvailable = noop
 }) {
   const [subtitles, setSubtitles] = React.useState([]);
   const [currentSubtitle, setCurrentSubtitle] = React.useState({ text: null, name: null });
 
   const onCueChangeEvent = useEvent(handleCueChange);
-  const onPlayerReadyEvent = useEvent(onPlayerReady);
+  const onPlayerReadyEvent = useEvent(onPlayerAvailable);
 
   const memoizedSubtitles = React.useMemo(() => subtitles, [subtitles]);
 
