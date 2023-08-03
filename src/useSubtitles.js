@@ -12,8 +12,8 @@ import { useEventListener } from "./machinery/useEventListener";
  *  current: { 
  *    text: string, 
  *    voice: string,
- *    startTime: string,
- *    endTime: string
+ *    startTime: number,
+ *    endTime: number
  *  }
  * }} 
  */
