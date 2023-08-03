@@ -1,29 +1,18 @@
 import { useEvent } from "./machinery/useEvent";
 import { useEventListener } from "./machinery/useEventListener";
 
-/** 
- * @param {{ 
- *  player: (HTMLVideoElement | HTMLAudioElement), 
- *  language: string, 
- *  onPlayerAvailable: (player: (HTMLVideoElement | HTMLAudioElement)) => void 
- * }}
- * @returns {{ 
- *  subtitles: VTTCue[], 
- *  current: { 
- *    text: string, 
- *    voice: string,
- *    startTime: number,
- *    endTime: number
- *  }
- * }} 
- */
 export function useSubtitles({
   player,
   language = "nl",
   onPlayerAvailable = noop
 }) {
   const [subtitles, setSubtitles] = React.useState([]);
-  const [currentSubtitle, setCurrentSubtitle] = React.useState({ text: null, name: null });
+  const [currentSubtitle, setCurrentSubtitle] = React.useState({ 
+    startTime: null,
+    endTime: null,
+    voice: null,
+    text: null
+  });
 
   const onCueChangeEvent = useEvent(handleCueChange);
   const onPlayerReadyEvent = useEvent(onPlayerAvailable);
@@ -87,12 +76,11 @@ export function useSubtitles({
 }
 
 /** @param {{ text: string }} */
-function getVoiceFromCue({ text ) {
+function getVoiceFromCue({ text }) {
   const match = /(<v (?<name>.+?)>)/.exec(text);
   return match ? `${match?.groups?.name}` : null;
 }
-
-/** @param {TextTrackCueList} x */
+ 
 function toIterable(x) {
   return !x ? [] : [...x];
 }

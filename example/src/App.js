@@ -1,5 +1,13 @@
-import { useSubtitles }  from '@kaliber/use-subtitles'
+import { NativeAudioPlayer } from './NativeAudioPlayer'
+import { NativeVideoPlayer } from './NativeVideoPlayer'
+import { ReactPlayerComponent } from './ReactPlayer'
 
-export default function App() {
-  return <div>{useSubtitles()}</div>
+export function App() {
+  return (
+    <main>
+      <NativeAudioPlayer />
+      <NativeVideoPlayer />
+      <ReactPlayerComponent />
+    </main>
+  )
 }
