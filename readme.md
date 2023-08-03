@@ -89,7 +89,38 @@ function Component() {
 | Name          | Type          | Description   |
 | ------------- | ------------- | ------------- |
 | `subtitles`   | `(HTMLVideoElement \| HTMLAudioElement)[]` | An array of all cues from the subtitle in the currently selected language. |
-| `current`  | `{ text: string, name: string }` | Returns the current `text` (including any markup tags it main contain), and the name (throug the `voice`-tag) of the current speaker. |
+| `current`  | `{ text: string, name: string }` | Returns the current `text` (including any [markup tags](https://www.w3.org/TR/webvtt1/#webvtt-internal-node-object) it main contain), and the name (through the `voice`-tag) of the current speaker. |
+
+## WebVTT
+Here's a quick glance at a `WebVTT` file.
+`use-subtitles` extracts some of the available data from the cues. Here's an overview of _what_ it extracts, and how that is returned.
+
+| Kind | Description |
+| ---- | ----------- |
+| `00:00:00.000 --> 00:00:20.000` | Timestamp. |
+| `<v Name>` | `voice`-tag. Outputted by hook under `current.speaker`. |
+
+```vtt
+WEBVTT
+
+00:00:00.000 --> 00:00:20.000
+<v Fred>Hi, my name is Fred
+
+00:00:02.500 --> 00:00:22.500
+<v Bill>Hi, I’m Bill
+
+00:00:05.000 --> 00:00:25.000
+<v Fred>Would you like to get a coffee?
+
+00:00:07.500 --> 00:00:27.500
+<v Bill>Sure! I’ve only had one today.
+
+00:00:10.000 --> 00:00:30.000
+<v Fred>This is my fourth!
+
+00:00:12.500 --> 00:00:32.500
+<v Fred>OK, let’s go.
+```
 
 ## Tips & Gotcha's
 
