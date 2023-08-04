@@ -1,8 +1,8 @@
-import { getVoiceFromCue, toIterable, noop } from './machinery/utilities';
+import { getVoiceFromCue, toIterable } from './machinery/utilities';
 import { useCallbackRef } from "./machinery/useCallbackRef";
 import { useEvent } from "./machinery/useEvent";
 
-export function useSubtitles({ language = "nl", onRefAvailable = noop }) {
+export function useReactPlayerSubtitles({ language = "nl" }) {
   const [subtitles, setSubtitles] = React.useState([]);
   const [currentSubtitle, setCurrentSubtitle] = React.useState({
     startTime: null,
@@ -15,20 +15,18 @@ export function useSubtitles({ language = "nl", onRefAvailable = noop }) {
   const onLoadedMetadataEvent = useEvent(handleInitialLoad);
 
   const memoizedSubtitles = React.useMemo(() => subtitles, [subtitles]);
-  
-  const ref = useCallbackRef({
-    onMount: (x) => {
-      onRefAvailable(x)
-      x?.addEventListener('loadedmetadata', onLoadedMetadataEvent);
-    },
-    onUnmount: (x) => {
-      x?.removeEventListener('loadedmetadata', onLoadedMetadataEvent);
-    }
-  })
  
-  /** @param {Event & { target: { textTracks: TextTrackCueList }} } e */
-  function handleInitialLoad(e) {
-    const currentTrack = toIterable(e.target.textTracks).find(
+  const ref = useCallbackRef({
+    onMount: onLoadedMetadataEvent,
+    onUnmount: console.debug
+  })
+
+  function handleInitialLoad(node) {
+    const player = node.getInternalPlayer()
+
+    if (!player) return
+
+    const currentTrack = toIterable(player.textTracks).find(
       (x) => x.language === language
     );
 
@@ -72,3 +70,4 @@ export function useSubtitles({ language = "nl", onRefAvailable = noop }) {
     ref
   };
 }
+ 
