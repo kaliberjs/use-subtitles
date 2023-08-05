@@ -1,6 +1,7 @@
 import { useSubtitles } from '@kaliber/use-subtitles'
 import ReactPlayer from 'react-player'
 
+const url = 'https://archive.org/download/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4'
 const config = {
   file: { tracks: [{
     kind: 'subtitles',
@@ -16,16 +17,20 @@ export function ReactPlayerComponent() {
     language: 'en'
   })
 
+  React.useEffect(
+    () => { console.log(reactPlayerRef.current.getCurrentTime()) },
+    [reactPlayerRef]
+  )
+
   return (
-    <section>
+    <>
       <ReactPlayer
         controls
-        onReady={x => setSubtitleRef(x.getInternalPlayer())}
         ref={reactPlayerRef}
-        url="./assets/audio.mp3"
-        {... { config }}
+        onReady={x => setSubtitleRef(x.getInternalPlayer())}
+        {... { url, config }}
       />
       <pre>{JSON.stringify(current)}</pre>
-    </section>
+    </>
   )
 }
