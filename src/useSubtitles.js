@@ -1,8 +1,8 @@
-import { getVoiceFromCue, toIterable, noop } from './machinery/utilities';
+import { getVoiceFromCue, toIterable } from './machinery/utilities';
 import { useCallbackRef } from "./machinery/useCallbackRef";
 import { useEvent } from "./machinery/useEvent";
 
-export function useSubtitles({ language = "nl", onRefAvailable = noop }) {
+export function useSubtitles({ language = "nl" }) {
   const [subtitles, setSubtitles] = React.useState([]);
   const [currentSubtitle, setCurrentSubtitle] = React.useState({
     startTime: null,
@@ -17,10 +17,7 @@ export function useSubtitles({ language = "nl", onRefAvailable = noop }) {
   const memoizedSubtitles = React.useMemo(() => subtitles, [subtitles]);
   
   const [ref, setSubtitleRef] = useCallbackRef({
-    onMount: (x) => {
-      onRefAvailable(x)
-      onLoadedMetadataEvent(x)
-    }
+    onMount: onLoadedMetadataEvent
   })
  
   /** @param {{ textTracks: TextTrackCueList}} */

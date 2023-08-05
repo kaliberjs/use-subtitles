@@ -9,12 +9,12 @@ const attributes = {
 
 export function NativeAudioPlayer() {
   const { ref, setSubtitleRef, current } = useSubtitles({
-    onPlayerAvailable: (x) => x.load(),
+    onRefAvailable: (x) => x.load(),
     language: 'en'
   })
 
   React.useEffect(
-    () => { console.log(ref.current.duration) },
+    () => { console.log(`AudioElement src: ${ref.current.currentSrc}`) },
     [ref]
   )
 

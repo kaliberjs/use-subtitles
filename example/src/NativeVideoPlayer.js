@@ -9,12 +9,11 @@ const attributes = {
 
 export function NativeVideoPlayer() {
   const { ref, setSubtitleRef, current } = useSubtitles({
-    onPlayerAvailable: (x) => x.load(),
     language: 'en'
   })
 
   React.useEffect(
-    () => { console.log(ref.current.duration) },
+    () => { console.log(`VideoElement src: ${ref.current.currentSrc}`) },
     [ref]
   )
 

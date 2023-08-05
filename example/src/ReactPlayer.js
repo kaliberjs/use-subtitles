@@ -18,7 +18,7 @@ export function ReactPlayerComponent() {
   })
 
   React.useEffect(
-    () => { console.log(reactPlayerRef.current.getCurrentTime()) },
+    () => { console.log(`ReactPlayer duration: ${reactPlayerRef.current.getDuration()}`) },
     [reactPlayerRef]
   )
 
