@@ -15,5 +15,5 @@ export function useCallbackRef({ onMount = noop, onUnmount = noop }) {
     }
   }, [onMount, onUnmount]);
 
-  return setRef;
+  return [nodeRef, setRef];
 }

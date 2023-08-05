@@ -1,4 +1,4 @@
-import { useReactPlayerSubtitles } from '@kaliber/use-subtitles'
+import { useSubtitles } from '@kaliber/use-subtitles'
 import ReactPlayer from 'react-player'
 
 const config = {
@@ -11,7 +11,8 @@ const config = {
 }
 
 export function ReactPlayerComponent() {
-  const { ref, current } = useReactPlayerSubtitles({
+  const reactPlayerRef = React.useRef(null)
+  const { setSubtitleRef, current } = useSubtitles({
     language: 'en'
   })
 
@@ -19,9 +20,10 @@ export function ReactPlayerComponent() {
     <section>
       <ReactPlayer
         controls
-        onReady={ref}
+        onReady={x => setSubtitleRef(x.getInternalPlayer())}
+        ref={reactPlayerRef}
         url="./assets/audio.mp3"
-        {... { ref, config }}
+        {... { config }}
       />
       <pre>{JSON.stringify(current)}</pre>
     </section>

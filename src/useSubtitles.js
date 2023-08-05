@@ -16,19 +16,16 @@ export function useSubtitles({ language = "nl", onRefAvailable = noop }) {
 
   const memoizedSubtitles = React.useMemo(() => subtitles, [subtitles]);
   
-  const ref = useCallbackRef({
+  const [ref, setSubtitleRef] = useCallbackRef({
     onMount: (x) => {
       onRefAvailable(x)
-      x?.addEventListener('loadedmetadata', onLoadedMetadataEvent);
-    },
-    onUnmount: (x) => {
-      x?.removeEventListener('loadedmetadata', onLoadedMetadataEvent);
+      onLoadedMetadataEvent(x)
     }
   })
  
-  /** @param {Event & { target: { textTracks: TextTrackCueList }} } e */
-  function handleInitialLoad(e) {
-    const currentTrack = toIterable(e.target.textTracks).find(
+  /** @param {{ textTracks: TextTrackCueList}} */
+  function handleInitialLoad({ textTracks }) {
+    const currentTrack = toIterable(textTracks).find(
       (x) => x.language === language
     );
 
@@ -69,6 +66,7 @@ export function useSubtitles({ language = "nl", onRefAvailable = noop }) {
   return {
     subtitles: memoizedSubtitles,
     current: currentSubtitle,
+    setSubtitleRef,
     ref
   };
 }

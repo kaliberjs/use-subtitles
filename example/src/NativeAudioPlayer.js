@@ -1,14 +1,14 @@
 import { useSubtitles } from '@kaliber/use-subtitles'
 
 export function NativeAudioPlayer() {
-  const { ref, current } = useSubtitles({
+  const { setSubtitleRef, current } = useSubtitles({
     onPlayerAvailable: (x) => x.load(),
     language: 'en'
   })
 
   return (
     <section>
-      <audio preload="auto" controls {... { ref }}>
+      <audio preload="auto" controls ref={setSubtitleRef}>
         <source type="audio/mp3" src="./assets/audio.mp3" />
         <track src="./assets/audio.vtt" kind="subtitles" srcLang="en" default />
       </audio>
