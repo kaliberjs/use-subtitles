@@ -41,10 +41,10 @@ export function useSubtitles({ language = "nl" }) {
     })
   }
  
-  /** @param {Event & { target: { language: string, cues: TextTrackCueList, activeCues: TextTrackCueList}}} e - generic event */
-  function handleCueChange(e) { 
-    handleSubtitles({ language: e.target.language, cues: e.target.cues });
-    handleCurrentSubtitle({ language: e.target.language, cues: e.target.activeCues });
+  /** @param {{ target: { language: string, cues: TextTrackCueList, activeCues: TextTrackCueList } }} */
+  function handleCueChange({ target }) { 
+    handleSubtitles({ language: target.language, cues: target.cues });
+    handleCurrentSubtitle({ language: target.language, cues: target.activeCues });
   }
 
   /** @param {{ language: string, cues: TextTrackCueList }} */
@@ -56,17 +56,14 @@ export function useSubtitles({ language = "nl" }) {
 
   /** @param {{ language: string, cues: TextTrackCueList }} */
   function handleCurrentSubtitle({ language, cues }) {
-    toIterable(cues).forEach((cue) => {
-      setCurrentSubtitle(x => ({
-        ...x,
-        [language]: {
-          text: cue.getCueAsHTML().textContent,
-          voice: getVoiceFromCue(cue.text),
-          startTime: cue.startTime,
-          endTime: cue.endTime
-        }
-      }));
-    });
+    const [cue] = toIterable(cues).map((x) => ({
+      text: x.getCueAsHTML().textContent,
+      voice: getVoiceFromCue(x.text),
+      startTime: x.startTime,
+      endTime: x.endTime
+    }))
+
+    setCurrentSubtitle(x => ({ ...x, [language]: cue }))
   }
 
   return {
