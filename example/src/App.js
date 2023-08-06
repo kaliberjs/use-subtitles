@@ -1,5 +1,6 @@
 import { NativeAudioPlayer } from './NativeAudioPlayer'
 import { NativeVideoPlayer } from './NativeVideoPlayer'
+import { MultiLangualPlayer } from './MultiLangualPlayer'
 import { ReactPlayerComponent } from './ReactPlayer'
 
 import styles from './App.css'
@@ -13,6 +14,10 @@ export function App() {
 
       <Section title="Native Video Player">
         <NativeVideoPlayer />
+      </Section>
+
+      <Section title="Multi Languagal Player">
+        <MultiLangualPlayer />
       </Section>
 
       <Section title="ReactPlayer">
