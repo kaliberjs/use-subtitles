@@ -27,7 +27,6 @@ Here's a short example demonstrating the most common use case.
 import { useSubtitles } from '@kaliber/use-subtitles'
 
 function Component() {
-  const videoRef = React.useRef(null);
   const { ref, current } = useSubtitles({
     language: "en"
   });
