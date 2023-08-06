@@ -18,7 +18,7 @@ export function useSubtitles({ language = "nl" }) {
   const onUnmountEvent = useEvent(handleUnmount);
 
   const memoizedSubtitles = React.useMemo(() => subtitles[language], [subtitles, language]);
-  const memoizedCurrentSubtitle = currentSubtitle[language]
+  const memoizedCurrentSubtitle = React.useMemo(() => currentSubtitle[language], [currentSubtitle, language])
 
   const [ref, setSubtitleRef] = useCallbackRef({
     onMount: onMountEvent,
