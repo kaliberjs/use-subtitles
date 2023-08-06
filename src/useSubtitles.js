@@ -12,31 +12,37 @@ export function useSubtitles({ language = "nl" }) {
   });
 
   const onCueChangeEvent = useEvent(handleCueChange);
-  const onLoadedMetadataEvent = useEvent(handleInitialLoad);
+  const onMountEvent = useEvent(handleInitialLoad);
+  const onUnmountEvent = useEvent(handleUnmount);
 
   const memoizedSubtitles = React.useMemo(() => subtitles, [subtitles]);
   
   const [ref, setSubtitleRef] = useCallbackRef({
-    onMount: onLoadedMetadataEvent
+    onMount: onMountEvent,
+    onUnmount: onUnmountEvent
   })
- 
-  /** @param {{ textTracks: TextTrackCueList}} */
-  function handleInitialLoad({ textTracks }) {
-    const currentTrack = toIterable(textTracks).find(
-      (x) => x.language === language
-    );
 
-    if (currentTrack?.language === language) {
-      void currentTrack.addEventListener("cuechange", onCueChangeEvent);
+  /** @param {{ textTracks: TextTrackCueList }} node */
+  function handleInitialLoad(node) {
+    const currentTrack = getCurrentTrackByLanguage(node?.textTracks)
+
+    if (currentTrack) {
+      currentTrack.addEventListener("cuechange", onCueChangeEvent);
       currentTrack.mode = "hidden";
-
-      return () =>
-        currentTrack.removeEventListener("cuechange", onCueChangeEvent);
     }
   }
+  
+  /** @param {{ textTracks: TextTrackCueList }} node */
+  function handleUnmount(node) {
+    const currentTrack = getCurrentTrackByLanguage(node?.textTracks)
 
+    if (currentTrack) {
+      currentTrack.removeEventListener("cuechange", onCueChangeEvent);
+    }
+  }
+ 
   /** @param {Event & { target: { cues: TextTrackCueList, activeCues: TextTrackCueList}}} e - generic event */
-  function handleCueChange(e) {
+  function handleCueChange(e) { 
     handleSubtitles({ cues: e.target.cues });
     handleCurrentSubtitle({ cues: e.target.activeCues });
   }
@@ -58,6 +64,12 @@ export function useSubtitles({ language = "nl" }) {
         endTime: x.endTime
       });
     });
+  }
+
+  function getCurrentTrackByLanguage(x) {
+    return toIterable(x).find(
+      (x) => x.language === language
+    );
   }
 
   return {

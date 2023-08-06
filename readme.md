@@ -4,8 +4,10 @@ Easily consume your video elements' WebVTT subtitles in React.
 ## Motivation
 WebVTT subtitles are a great feature, but they come with some difficulties:
 - Styling the subtitles with CSS to achieve a consistent look across browsers can be challenging.
-Interfacing with the subtitles from JavaScript code is not straightforward.
-- This hook aims to make that easier for you.
+- Third party dependencies hide the underlaying `HTMLMediaElement`, and thus;
+- Interfacing with the subtitles from JavaScript code is not straightforward.
+
+**This hook aims to make that easier for you.**
 
 ## Installation
 
@@ -18,22 +20,20 @@ yarn add @kaliber/use-subtitles
 When working with `@kaliber/build`, add `@kaliber/use-subtitles` to your `compileWithBabel` array. 
 
 ## Usage
-Here's a short example demonstrating the most common use case:
-Look at the `/example` directory for further examples.
+Here's a short example demonstrating the most common use case.
+
 
 ```jsx
 import { useSubtitles } from '@kaliber/use-subtitles'
 
 function Component() {
   const videoRef = React.useRef(null);
-  const { current } = useSubtitles({
-    onPlayerAvailable: (x) => x.load(),
-    player: videoRef.current,
+  const { ref, current } = useSubtitles({
     language: "en"
   });
 
   return (
-    <video ref={videoRef}>
+    <video {... { ref }}>
       <source type="audio/mp3" src="./audio.mp3" />
       <track src="./subtitle.vtt" kind="subtitles" srcLang="en" default />
     </video>
@@ -41,8 +41,12 @@ function Component() {
 }
 ```
 
+Look at the [`/example`](/example) directory for further examples.
+
 ## Usage with `ReactPlayer`
-`use-subtitles` is designed to be player-agnostic. As long as you provide the underlying `HTMLVideoPlayer` of your dependency, the library should work seamlessly.
+As long as you are able provide the underlying `HTMLMediaElement` of your dependency, the library should work.
+
+Because `ReactPlayer` only provides the underlaying ref whenever it deems it ready, we need to set it through the `onReady` method (up until that time, its value will otherwise be `null`). The example below sets given ref through the `setSubtitleRef` method.
 
 ```jsx
 import { useSubtitles } from '@kaliber/use-subtitles'
@@ -58,18 +62,18 @@ const config = {
 }
 
 function Component() {
-  const videoRef = React.useRef(null);
-  const { current } = useSubtitles({
-    player: videoRef.current?.getInternalPlayer(),
+  const reactPlayerRef = React.useRef(null);
+  const { current, setSubtitleRef } = useSubtitles({
     language: "en"
   });
 
   return (
     <ReactPlayer
-        ref={videoRef}
-        url="./audio.mp3"
-        {... { config }}
-      />
+      ref={reactPlayerRef}
+      onReady={x => setSubtitleRef(x.getInternalPlayer())}
+      url="./audio.mp3"
+      {... { config }}
+    />
   )
 }
 ```
@@ -77,27 +81,21 @@ function Component() {
 ## Parameters
 The hook accepts the following parameters:
 
-| Name          | Type          | Description   |
-| ------------- | ------------- | ------------- |
-| `player`      | `HTMLVideoElement \| HTMLAudioElement` | A native audio or video element. Can also be supplied from an underlaying element in a third party player like `ReactPlayer` (e.g. through the use of the `getInternalPlayer()` method). |
-| `language`  | `string`  | Expects a language code that matches the `track` language.  |
-| `onPlayerAvailable`  | `(HTMLVideoElement \| HTMLAudioElement) => void`  | A callback to indicate the `player` is available; can you used to `load()` a native `video` element. |
+| Key          | Type          | Example | Description   |
+| ------------- | ------------- | ------------- | --- |
+| `language`  | `string`  | `nl` | Expects a language code that matches the `track` language.  |
 
 ## Return values
-The hook returns and object with two keys:
+The `useSubtitles` hook returns the following values:
 
-#### `subtitles`
-An array containing all the subtitles. Each subtitle is represented as a [VTTCue](https://developer.mozilla.org/en-US/docs/Web/API/VTTCue) object, which inherits from [TextTrackCues](https://developer.mozilla.org/en-US/docs/Web/API/TextTrackCue). You can read more about [VTTCue](https://developer.mozilla.org/en-US/docs/Web/API/VTTCue) at MDN.
+| Key            | Description                                                                                                    |
+|-----------------|---------------------------------------------------------------------------------------------------------------|
+| `subtitles`     | An array of all subtitles available for the specified language.                                              |
+| `current`       | An object representing the currently active subtitle, with properties `startTime`, `endTime`, `voice`[^1], and `text`. |
+| `setSubtitleRef`| A function to set the player reference. This is used for third-party players like `ReactPlayer` to set the ref (for the underlaying `HTMLMediaElement`) asynchronously. |
+| `ref`           | A reference that should be attached to the player element ref attribute.                                    |
 
-#### `current`
-An object representing the current subtitle being displayed. It includes the following properties:
-
-| Key | Type | Description |
-| --- | ---- | ----------- |
-| `text` | `string` | Returns the current `text` (including any [markup tags](https://www.w3.org/TR/webvtt1/#webvtt-internal-node-object) it main contain). | 
-| `voice` | `string` | The name of the current speaker (called `voice` in `WebVTT`). |
-| `startTime` | `number` | The start time of the current cue. | 
-| `endTime` | `number` | The end time of the current cue. |
+[^1]: `voice` represents the current speakers' name.
 
 ## WebVTT
 A WebVTT file typically looks like this: 
@@ -130,13 +128,8 @@ WEBVTT
 | Kind | Description |
 | ---- | ----------- |
 | `00:00:00.000 --> 00:00:20.000` | Timestamp. Outputted under `current.startTime` and `currrent.endTime`, and available for all cues in the `subtitles` array. |
-| `<v Fred>` | `voice`-tag. Outputted by hook under `current.speaker`. |
+| `<v Fred>` | `voice`-tag. Outputted by hook under `current.voice`. |
 | `Hi, my name is Fred` | The `text`, available under `current.text`, and available for all cues in the `subtitles` array as `text`. |
-
-## Tips & Gotcha's
-
-### Use `video` over `audio`
-The support for using `track` as a child element in `video` is better than it is for `audio`.
 
 ---
 

@@ -7,25 +7,28 @@ import styles from './App.css'
 export function App() {
   return (
     <main className={styles.app}>
-      <Section>
+      <Section title="Native Audio Player">
         <NativeAudioPlayer />
       </Section>
 
-      <Section>
+      <Section title="Native Video Player">
         <NativeVideoPlayer />
       </Section>
 
-      <Section>
+      <Section title="ReactPlayer">
         <ReactPlayerComponent />
       </Section>
     </main>
   )
 }
 
-function Section({ children }) {
+function Section({ title, children }) {
   return (
     <section className={styles.componentSection}>
-      {children}
+      <h2 className={styles.title}>{title}</h2>
+      <div className={styles.container}>
+        {children}
+      </div>
     </section>
   )
 }

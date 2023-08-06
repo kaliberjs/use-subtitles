@@ -1,5 +1,6 @@
 body {
   margin: 1rem;
+  background-color: midnightblue;
 }
 
 .app {
@@ -8,7 +9,7 @@ body {
   max-width: 100%;
   height: 100vh;
   width: 100vw;
-  gap: 1rem;
+  gap: 2rem;
 
   & > .section {
     width: 100vw;
@@ -17,8 +18,26 @@ body {
 
 .componentSection {
   display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 0.25rem;
+
+  & > .title {
+    margin: 0;
+  }
+}
+
+.title {
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: whitesmoke;
+  font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+}
+
+.container {
+  display: grid;
   place-content: center;
-  background-color: peachpuff;
-  border-radius: 1rem;
+  background-color:  skyblue;
+  border-radius: 0.5rem;
   padding: 1rem;
 }
