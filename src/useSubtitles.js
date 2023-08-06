@@ -2,15 +2,17 @@ import { getVoiceFromCue, toIterable } from './machinery/utilities';
 import { useCallbackRef } from "./machinery/useCallbackRef";
 import { useEvent } from "./machinery/useEvent";
 
+const initial = {
+  startTime: null,
+  endTime: null,
+  voice: null,
+  text: null
+} 
+
 export function useSubtitles({ language = "nl" }) {
   const [subtitles, setSubtitles] = React.useState({ [language]: [] });
   const [currentSubtitle, setCurrentSubtitle] = React.useState({ 
-    [language]: {
-      startTime: null,
-      endTime: null,
-      voice: null,
-      text: null
-    }
+    [language]: initial
   });
 
   const onCueChangeEvent = useEvent(handleCueChange);
@@ -54,7 +56,7 @@ export function useSubtitles({ language = "nl" }) {
       endTime: x.endTime
     }))
     
-    setCurrentSubtitle(x => ({ ...x, [target.language]: cue }))
+    setCurrentSubtitle(x => ({ ...x, [target.language]: cue ?? initial }))
   }
 
   return {
