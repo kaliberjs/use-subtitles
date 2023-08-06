@@ -82,7 +82,7 @@ The hook accepts the following parameters:
 
 | Key          | Type          | Example | Description   |
 | ------------- | ------------- | ------------- | --- |
-| `language`  | `string`  | `nl` | Expects a language code that matches the `track` language.  |
+| `language`  | `string`  | `nl` | Expects a language code that matches the `track` language. Bear in mind this has to be a [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) string. For example in case of Japan, `jp` does not work in all browsers, where `ja` does, which is the valid ISO code.  |
 
 ## Return values
 The `useSubtitles` hook returns the following values:

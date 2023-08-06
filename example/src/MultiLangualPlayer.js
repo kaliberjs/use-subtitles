@@ -7,6 +7,12 @@ const attributes = {
   width: 350
 }
 
+const languages = [
+  { code: 'en', flag: '🇬🇧' },
+  { code: 'nl', flag: '🇳🇱' },
+  { code: 'ja', flag: '🇯🇵' }
+]
+
 export function MultiLangualPlayer() {
   const [language, setLanguage] = React.useState('nl')
   const { setSubtitleRef, current } = useSubtitles({
@@ -17,19 +23,21 @@ export function MultiLangualPlayer() {
   return (
     <>
       <div>
-        <button onClick={() => setLanguage('en')}>English</button>
-        <button onClick={() => setLanguage('jp')}>Japanese</button>
-        <button onClick={() => setLanguage('nl')}>Dutch</button>
+        {languages.map(x => (
+          <button onClick={() => setLanguage(x.code)}>
+            <span role="img">{x.flag}</span>
+          </button>
+        ))}
       </div>
 
       <audio ref={setSubtitleRef} {... attributes}>
         <source type="audio/mp3" src="./assets/audio.mp3" />
         <track src="./assets/audio.vtt" kind="subtitles" srcLang="en" />
-        <track src="./assets/audio-jp.vtt" kind="subtitles" srcLang="jp" />
+        <track src="./assets/audio-ja.vtt" kind="subtitles" srcLang="ja" />
         <track src="./assets/audio-nl.vtt" kind="subtitles" srcLang="nl" default />
       </audio>
       <pre>{JSON.stringify(current)}</pre>
-      {language}
+      <pre>Language: {language}</pre>{language}
     </>
   )
 }
