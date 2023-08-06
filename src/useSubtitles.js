@@ -43,27 +43,18 @@ export function useSubtitles({ language = "nl" }) {
  
   /** @param {{ target: { language: string, cues: TextTrackCueList, activeCues: TextTrackCueList } }} */
   function handleCueChange({ target }) { 
-    handleSubtitles({ language: target.language, cues: target.cues });
-    handleCurrentSubtitle({ language: target.language, cues: target.activeCues });
-  }
-
-  /** @param {{ language: string, cues: TextTrackCueList }} */
-  function handleSubtitles({ language, cues }) {
-    if (!subtitles.length && cues) {
-      setSubtitles(x => ({ ...x, [language]: toIterable(cues) }));
+    if (!subtitles.length && target.cues) {
+      setSubtitles(x => ({ ...x, [target.language]: toIterable(target.cues) }));
     }
-  }
 
-  /** @param {{ language: string, cues: TextTrackCueList }} */
-  function handleCurrentSubtitle({ language, cues }) {
-    const [cue] = toIterable(cues).map((x) => ({
+    const [cue] = toIterable(target.activeCues).map((x) => ({
       text: x.getCueAsHTML().textContent,
       voice: getVoiceFromCue(x.text),
       startTime: x.startTime,
       endTime: x.endTime
     }))
-
-    setCurrentSubtitle(x => ({ ...x, [language]: cue }))
+    
+    setCurrentSubtitle(x => ({ ...x, [target.language]: cue }))
   }
 
   return {

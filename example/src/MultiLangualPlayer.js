@@ -24,7 +24,7 @@ export function MultiLangualPlayer() {
     <>
       <div>
         {languages.map(x => (
-          <button onClick={() => setLanguage(x.code)}>
+          <button key={x.flag} onClick={() => setLanguage(x.code)}>
             <span role="img">{x.flag}</span>
           </button>
         ))}
