@@ -17,6 +17,10 @@ export function useCallbackRef({ onMount = noop, onUnmount = noop }) {
     set current(x) {
       const last = internalRef.current;
 
+      if (last) {
+        onUnmount(last)
+      }
+
       if (last !== x) {
         internalRef.current = x
         onMount(x)
