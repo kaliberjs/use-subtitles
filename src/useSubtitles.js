@@ -43,7 +43,7 @@ export function useSubtitles({ language = "nl" }) {
     })
   }
  
-  /** @param {{ target: { language: string, cues: TextTrackCueList, activeCues: TextTrackCueList } }} */
+  /** @param {{ target: { language: string, cues: TextTrackCueList, activeCues: TextTrackCueList } }} _ */
   function handleCueChange({ target }) { 
     if (!subtitles.length && target.cues) {
       setSubtitles(x => ({ ...x, [target.language]: toIterable(target.cues) }));

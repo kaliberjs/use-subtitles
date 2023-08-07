@@ -1,4 +1,4 @@
-/** @param {{ text: string }} */
+/** @param {{ text: string }} _*/
 export function getVoiceFromCue({ text }) {
   const match = /(<v (?<name>.+?)>)/.exec(text);
   return match ? `${match?.groups?.name}` : null;
