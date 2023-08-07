@@ -45,7 +45,7 @@ Look at the [`/example`](/example) directory for further examples.
 ## Usage with `ReactPlayer`
 As long as you are able provide the underlying `HTMLMediaElement` of your dependency, the library should work.
 
-Because `ReactPlayer` only provides the underlaying ref whenever it deems it ready, we need to set it through the `onReady` method (up until that time, its value will otherwise be `null`). The example below sets given ref through the `setSubtitleRef` method.
+Because `ReactPlayer` only provides the underlaying ref whenever it deems it ready, we need to set it through the `onReady` method (up until that time, its value will otherwise be `null`).
 
 ```jsx
 import { useSubtitles } from '@kaliber/use-subtitles'
@@ -62,14 +62,14 @@ const config = {
 
 function Component() {
   const reactPlayerRef = React.useRef(null);
-  const { current, setSubtitleRef } = useSubtitles({
+  const { current, ref } = useSubtitles({
     language: "en"
   });
 
   return (
     <ReactPlayer
       ref={reactPlayerRef}
-      onReady={x => setSubtitleRef(x.getInternalPlayer())}
+      onReady={x => { ref.current = x.getInternalPlayer() }}
       url="./audio.mp3"
       {... { config }}
     />
@@ -91,7 +91,6 @@ The `useSubtitles` hook returns the following values:
 |-----------------|---------------------------------------------------------------------------------------------------------------|
 | `subtitles`     | An array of all subtitles available for the specified language.                                              |
 | `current`       | An object representing the currently active subtitle, with properties `startTime`, `endTime`, `voice`[^1], and `text`. |
-| `setSubtitleRef`| A function to set the player reference. This is used for third-party players like `ReactPlayer` to set the ref (for the underlaying `HTMLMediaElement`) asynchronously. |
 | `ref`           | A reference that should be attached to the player element ref attribute.                                    |
 
 [^1]: `voice` represents the current speakers' name.

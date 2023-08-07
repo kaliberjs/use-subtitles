@@ -22,7 +22,7 @@ export function useSubtitles({ language = "nl" }) {
   const memoizedSubtitles = React.useMemo(() => subtitles[language], [subtitles, language]);
   const memoizedCurrentSubtitle = React.useMemo(() => currentSubtitle[language], [currentSubtitle, language])
 
-  const [ref, setSubtitleRef] = useCallbackRef({
+  const ref = useCallbackRef({
     onMount: onMountEvent,
     onUnmount: onUnmountEvent
   })
@@ -62,7 +62,6 @@ export function useSubtitles({ language = "nl" }) {
   return {
     subtitles: memoizedSubtitles,
     current: memoizedCurrentSubtitle,
-    setSubtitleRef,
     ref
   };
 }

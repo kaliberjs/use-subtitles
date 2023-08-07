@@ -8,19 +8,19 @@ const attributes = {
 }
 
 export function NativeAudioPlayer() {
-  const { ref, setSubtitleRef, current } = useSubtitles({
+  const { ref, current } = useSubtitles({
     onRefAvailable: (x) => x.load(),
     language: 'en'
   })
 
   React.useEffect(
-    () => { console.log(`AudioElement src: ${ref.current.currentSrc}`) },
-    [ref]
+    () => console.log(`NativeAudioPlayer src:`, ref.current.currentSrc),
+    []
   )
 
   return (
     <>
-      <audio ref={setSubtitleRef} {... attributes}>
+      <audio {... { ref }} {... attributes}>
         <source type="audio/mp3" src="./assets/audio.mp3" />
         <track src="./assets/audio.vtt" kind="subtitles" srcLang="en" default />
       </audio>

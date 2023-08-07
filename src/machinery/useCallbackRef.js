@@ -1,19 +1,26 @@
 import { noop } from "./utilities";
 
 export function useCallbackRef({ onMount = noop, onUnmount = noop }) {
-  const nodeRef = React.useRef(null);
+  const internalRef = React.useRef(null);
 
-  const setRef = React.useCallback(node => {
-    if (nodeRef.current) {
-      onUnmount(nodeRef.current);
-    }
+  React.useEffect(
+    () => {
+      return () => onUnmount(internalRef.current)
+    },
+    []
+  )
 
-    nodeRef.current = node;
+  return {
+    get current() {
+      return internalRef.current;
+    },
+    set current(x) {
+      const last = internalRef.current;
 
-    if (nodeRef.current) {
-      onMount(nodeRef.current);
-    }
-  }, [onMount, onUnmount]);
-
-  return [nodeRef, setRef];
+      if (last !== x) {
+        internalRef.current = x
+        onMount(x)
+      }
+    },
+  }
 }

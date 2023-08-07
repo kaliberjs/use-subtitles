@@ -8,18 +8,18 @@ const attributes = {
 }
 
 export function NativeVideoPlayer() {
-  const { ref, setSubtitleRef, current } = useSubtitles({
+  const { ref, current } = useSubtitles({
     language: 'en'
   })
 
   React.useEffect(
-    () => { console.log(`VideoElement src: ${ref.current.currentSrc}`) },
-    [ref]
+    () => console.log(`NativeVideoPlayer src:`, ref.current.currentSrc),
+    []
   )
 
   return (
     <>
-      <video ref={setSubtitleRef} {... attributes}>
+      <video {... { ref }} {... attributes}>
         <source type="audio/mp3" src="./assets/audio.mp3" />
         <track src="./assets/audio.vtt" kind="subtitles" srcLang="en" default />
       </video>

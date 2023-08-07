@@ -15,10 +15,15 @@ const languages = [
 
 export function MultiLangualPlayer() {
   const [language, setLanguage] = React.useState('nl')
-  const { setSubtitleRef, current } = useSubtitles({
+  const { ref, current } = useSubtitles({
     onRefAvailable: (x) => x.load(),
     language
   })
+
+  React.useEffect(
+    () => console.log(`MultiLanguagalPlayer src:`, ref.current.currentSrc),
+    []
+  )
 
   return (
     <>
@@ -30,7 +35,7 @@ export function MultiLangualPlayer() {
         ))}
       </div>
 
-      <audio ref={setSubtitleRef} {... attributes}>
+      <audio {... { ref }} {... attributes}>
         <source type="audio/mp3" src="./assets/audio.mp3" />
         <track src="./assets/audio.vtt" kind="subtitles" srcLang="en" />
         <track src="./assets/audio-ja.vtt" kind="subtitles" srcLang="ja" />
