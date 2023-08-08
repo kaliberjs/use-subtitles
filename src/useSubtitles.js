@@ -30,6 +30,10 @@ export function useSubtitles({ language = "nl" }) {
   /** @param {{ textTracks: TextTrackCueList }} node */
   function handleInitialLoad(node) {
     toIterable(node?.textTracks).forEach((x) => {
+      if (!subtitles[language].length) {
+        setInitialSubtitles(x)
+      }
+      
       x.addEventListener("cuechange", onCueChangeEvent);
       x.mode = "hidden";
     })
@@ -42,20 +46,23 @@ export function useSubtitles({ language = "nl" }) {
       x.mode = "hidden";
     })
   }
+
+  /** @param {{ language: string, cues: TextTrackCueList }} _ */
+  function setInitialSubtitles({ cues, language }) {
+    if (!subtitles.length && cues) {
+      setSubtitles(x => ({ ...x, [language]: toIterable(cues) }));
+    }
+  }
  
   /** @param {{ target: { language: string, cues: TextTrackCueList, activeCues: TextTrackCueList } }} _ */
   function handleCueChange({ target }) { 
-    if (!subtitles.length && target.cues) {
-      setSubtitles(x => ({ ...x, [target.language]: toIterable(target.cues) }));
-    }
-
     const [cue] = toIterable(target.activeCues).map((x) => ({
       text: x.getCueAsHTML().textContent,
       voice: getVoiceFromCue(x.text),
       startTime: x.startTime,
       endTime: x.endTime
     }))
-    
+
     setCurrentSubtitle(x => ({ ...x, [target.language]: cue ?? initial }))
   }
 
