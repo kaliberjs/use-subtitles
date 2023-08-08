@@ -1,3 +1,4 @@
+import { useDestroy } from "./useDestroy";
 import { noop } from "./utilities";
 
 /** 
@@ -7,12 +8,9 @@ import { noop } from "./utilities";
 export function useCallbackRef({ onMount = noop, onUnmount = noop }) {
   const internalRef = React.useRef(null);
 
-  React.useEffect(
-    () => {
-      return () => onUnmount(internalRef.current)
-    },
-    []
-  )
+  useDestroy(() => {
+    onUnmount(internalRef.current)
+  })
 
   return {
     get current() {
