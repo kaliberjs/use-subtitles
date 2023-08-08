@@ -3,7 +3,7 @@ import { noop } from "./utilities";
 
 /** 
  * @param {{ onMount: Function, onUnmount: Function }} _
- * @returns {import('react').RefObject}
+ * @returns {import('react').RefObject<HTMLMediaElement>}
  */
 export function useCallbackRef({ onMount = noop, onUnmount = noop }) {
   const internalRef = React.useRef(null);
