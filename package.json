@@ -19,6 +19,6 @@
   ],
   "private": false,
   "license": "MIT",
-  "description": "A short description",
+  "description": "Hook to easily consume your HTMLMediaElement WebVTT subtitles.",
   "repository": "https://github.com/kaliberjs/library.git"
 }
