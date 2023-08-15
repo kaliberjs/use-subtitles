@@ -8,7 +8,7 @@ const attributes = {
 }
 
 export function Karaoke() {
-  const { ref, current: { metadata, subtitle } } = useSubtitles({
+  const { ref, subtitles, current: { metadata, subtitle } } = useSubtitles({
     language: 'en'
   })
 

@@ -26,25 +26,31 @@ export function useSubtitles({ language = "nl" }) {
 
   /** @param {HTMLMediaElement} node */
   function handleInitialLoad(node) {
-    toIterable(node?.textTracks).forEach((x) => {
-      const hasSubtitles = subtitles[language].length
-      const hasMetadata = metadata[language].length
-      const isSubtitleTrack = x.kind === 'subtitles'
-      const isMetadataTrack = x.kind === 'metadata'
+    const tracks = toIterable(node?.textTracks)
 
-      if (!hasSubtitles && isSubtitleTrack) {
-        setInitialSubtitles(x)
-      }
-      
-      if (!hasMetadata && isMetadataTrack) {
-        setInitialMetadata(x)
-      }
+    // Set initial subtitles
+    node?.addEventListener('loadedmetadata', () => {
+      tracks.forEach((x) => {
+        const hasSubtitles = subtitles[language].length
+        const hasMetadata = metadata[language].length
 
-      if (isSubtitleTrack) {
+        if (!hasSubtitles && x.kind === 'subtitles') {
+          setInitialSubtitles(x)
+        }
+        
+        if (!hasMetadata && x.kind === 'metadata') {
+          setInitialMetadata(x)
+        }
+      })
+    })
+
+    // Handle cue changes
+    tracks.forEach((x) => {
+      if (x.kind === 'subtitles') {
         x.addEventListener("cuechange", onCueChangeEvent);
       }
       
-      if (isMetadataTrack) {
+      if (x.kind === 'metadata') {
         x.addEventListener("cuechange", onMetadataChangeEvent);
       }
 
