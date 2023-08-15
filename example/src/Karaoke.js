@@ -20,7 +20,9 @@ export function Karaoke() {
         <track src="./assets/karaoke.vtt" kind="metadata" srcLang="en" />
       </audio>
       <pre>
-        {highlight({ text: metadata.text, word: subtitle.text })}
+        <span dangerouslySetInnerHTML={{
+          __html: highlight({ text: metadata.text, word: subtitle.text })
+        }} />
       </pre>
     </>
   )
@@ -28,15 +30,7 @@ export function Karaoke() {
   function highlight({ text, word }) {
     return (text ?? '')
       .split(' ')
-      .map(x => x === word ? <Accent>{x}</Accent> : x)
+      .map(x =>  x === word ? `<b style="color: red;">${x}</b>` : x)
       .join(' ')
   }
-}
-
-function Accent({ children }) {
-  return (
-    <b style={{ color: 'red' }}>
-      {children}
-    </b>
-  )
 }

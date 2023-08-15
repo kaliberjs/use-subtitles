@@ -73,9 +73,9 @@ export function useSubtitles({ language = "nl" }) {
     }
   }
 
-  /** @param {{ target: { language: string, cues: TextTrackCueList } }} _ */
+  /** @param {{ target: { language: string, activeCues: TextTrackCueList } }} _ */
   function handleMetadataChange({ target }) {
-    const [cue] = toIterable(target.cues).map(x => ({
+    const [cue] = toIterable(target.activeCues).map(x => ({
       text: isJSON(x.text) ? JSON.parse(x.text) : x.text,
       startTime: x.startTime,
       endTime: x.endTime
@@ -84,7 +84,7 @@ export function useSubtitles({ language = "nl" }) {
     setcurrentMetadata(x => ({ ...x, [target.language]: cue ?? initial }))
   }
  
-  /** @param {{ target: { language: string, cues: TextTrackCueList, activeCues: TextTrackCueList } }} _ */
+  /** @param {{ target: { language: string, activeCues: TextTrackCueList } }} _ */
   function handleCueChange({ target }) { 
     const [cue] = toIterable(target.activeCues).map((x) => ({
       text: x.getCueAsHTML().textContent,
