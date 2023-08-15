@@ -11,3 +11,13 @@ export function toIterable(x) {
 export function noop(x) {
   return null
 }
+
+export function isJSON(x) {
+  try {
+    JSON.parse(x);
+  } catch (e) {
+    return false;
+  }
+
+  return true;
+}

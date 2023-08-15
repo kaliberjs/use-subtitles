@@ -2,6 +2,7 @@ import { NativeAudioPlayer } from './NativeAudioPlayer'
 import { NativeVideoPlayer } from './NativeVideoPlayer'
 import { MultiLangualPlayer } from './MultiLangualPlayer'
 import { ReactPlayerComponent } from './ReactPlayer'
+import { Karaoke } from './Karaoke'
 
 import styles from './App.css'
 
@@ -16,8 +17,12 @@ export function App() {
         <NativeVideoPlayer />
       </Section>
 
-      <Section title="Multi Languagal Player">
+      <Section title="Multi Langual Player">
         <MultiLangualPlayer />
+      </Section>
+
+      <Section title="Karaoke">
+        <Karaoke />
       </Section>
 
       <Section title="ReactPlayer">
