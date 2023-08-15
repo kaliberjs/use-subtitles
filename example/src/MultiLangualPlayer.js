@@ -16,7 +16,6 @@ const languages = [
 export function MultiLangualPlayer() {
   const [language, setLanguage] = React.useState('nl')
   const { ref, current } = useSubtitles({
-    onRefAvailable: (x) => x.load(),
     language
   })
 

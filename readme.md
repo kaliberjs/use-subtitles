@@ -91,6 +91,7 @@ The `useSubtitles` hook returns the following values:
 |-----------------| --- |---------------------------------------------------------------------------------------------------------------|
 | `subtitles`     | `[]` | An array of all subtitles available for the specified language.                                              |
 | `current`       | `{ [key]: null }` | An object representing the currently active subtitle, with properties `startTime`, `endTime`, `voice`[^1], and `text`. |
+| `tracks`       | `{ [key]: [] }` | An object keeping all collected subtitle tracks as state. |
 | `ref`           | `{ current: null }` | A reference that should be attached to the player element ref attribute.                                    |
 
 [^1]: `voice` represents the current speakers' name.
