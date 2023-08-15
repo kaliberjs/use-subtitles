@@ -16,6 +16,7 @@ export function useSubtitles({ language = "nl" }) {
     [language]: initial
   });
 
+  const onMetadataChangeEvent = useEvent(handleMetadataChange);
   const onCueChangeEvent = useEvent(handleCueChange);
   const onMountEvent = useEvent(handleInitialLoad);
   const onUnmountEvent = useEvent(handleUnmount);
@@ -38,18 +39,22 @@ export function useSubtitles({ language = "nl" }) {
       const isSubtitleTrack = x.kind === 'subtitles'
       const isMetadataTrack = x.kind === 'metadata'
 
-      console.log(x.kind, x.cues);
-
       if (!hasSubtitles && isSubtitleTrack) {
         setInitialSubtitles(x)
       }
       
       if (!hasMetadata && isMetadataTrack) {
-        console.log(x);
         setInitialMetadata(x)
       }
+
+      if (isSubtitleTrack) {
+        x.addEventListener("cuechange", onCueChangeEvent);
+      }
       
-      x.addEventListener("cuechange", onCueChangeEvent);
+      if (isMetadataTrack) {
+        x.addEventListener("cuechange", onMetadataChangeEvent);
+      }
+
       x.mode = "hidden";
     })
   }
@@ -57,9 +62,7 @@ export function useSubtitles({ language = "nl" }) {
   /** @param {HTMLMediaElement} node */
   function handleUnmount(node) {
     toIterable(node?.textTracks).forEach((x) => {
-      if (x.kind === 'subtitles') {
-        x.removeEventListener("cuechange", onCueChangeEvent);
-      }
+      x.removeEventListener("cuechange", onCueChangeEvent);
     })
   }
 
@@ -72,24 +75,32 @@ export function useSubtitles({ language = "nl" }) {
 
   /** @param {{ language: string, cues: TextTrackCueList }} _ */
   function setInitialMetadata({ cues, language }) {
-    console.log({ cues});
     if (!metadata.length && cues) {
       setMetadata(x => ({ ...x, [language]: toIterable(cues) }));
     }
   }
- 
-  /** @param {{ target: { kind: TextTrackKind, language: string, cues: TextTrackCueList, activeCues: TextTrackCueList } }} _ */
-  function handleCueChange({ target }) { 
-    if (target.kind === 'subtitles') {
-      const [cue] = toIterable(target.activeCues).map((x) => ({
-        text: x.getCueAsHTML().textContent,
-        voice: getVoiceFromCue(x.text),
-        startTime: x.startTime,
-        endTime: x.endTime
-      }))
 
-      setCurrentSubtitle(x => ({ ...x, [target.language]: cue ?? initial }))
-    }
+  /** @param {{ target: { language: string, cues: TextTrackCueList } }} _ */
+  function handleMetadataChange({ target }) {
+    const cues = toIterable(target.cues).map(x => ({
+      text: isJsonString(x.text) ? JSON.parse(x.text) : x.text,
+      startTime: x.startTime,
+      endTime: x.endTime
+    }))
+
+    setMetadata(x => ({ ...x, [target.language]: cues }))
+  }
+ 
+  /** @param {{ target: { language: string, cues: TextTrackCueList, activeCues: TextTrackCueList } }} _ */
+  function handleCueChange({ target }) { 
+    const [cue] = toIterable(target.activeCues).map((x) => ({
+      text: x.getCueAsHTML().textContent,
+      voice: getVoiceFromCue(x.text),
+      startTime: x.startTime,
+      endTime: x.endTime
+    }))
+
+    setCurrentSubtitle(x => ({ ...x, [target.language]: cue ?? initial }))
   }
 
   return {
@@ -99,4 +110,15 @@ export function useSubtitles({ language = "nl" }) {
     tracks: memoizedTracks,
     ref
   };
+}
+
+
+
+function isJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
 }

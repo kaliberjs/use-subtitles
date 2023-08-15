@@ -12,7 +12,7 @@ export function Karaoke() {
     language: 'en'
   })
 
-  console.log({ tracks, metadata })
+  console.log({ current, tracks, metadata })
 
   return (
     <>
