@@ -1,4 +1,4 @@
-import { getVoiceFromCue, toIterable } from './machinery/utilities';
+import { getVoiceFromCue, isJSON, toIterable } from './machinery/utilities';
 import { useCallbackRef } from "./machinery/useCallbackRef";
 import { useEvent } from "./machinery/useEvent";
 
@@ -83,7 +83,7 @@ export function useSubtitles({ language = "nl" }) {
   /** @param {{ target: { language: string, cues: TextTrackCueList } }} _ */
   function handleMetadataChange({ target }) {
     const cues = toIterable(target.cues).map(x => ({
-      text: isJsonString(x.text) ? JSON.parse(x.text) : x.text,
+      text: isJSON(x.text) ? JSON.parse(x.text) : x.text,
       startTime: x.startTime,
       endTime: x.endTime
     }))
@@ -110,15 +110,4 @@ export function useSubtitles({ language = "nl" }) {
     tracks: memoizedTracks,
     ref
   };
-}
-
-
-
-function isJsonString(str) {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
-    return true;
 }
