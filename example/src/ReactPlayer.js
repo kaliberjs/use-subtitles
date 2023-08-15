@@ -13,7 +13,7 @@ const config = {
 
 export function ReactPlayerComponent() {
   const reactPlayerRef = React.useRef(null)
-  const { ref, current } = useSubtitles({
+  const { ref, current: { subtitle } } = useSubtitles({
     language: 'en'
   })
 
@@ -25,7 +25,7 @@ export function ReactPlayerComponent() {
         onReady={x => { ref.current = x.getInternalPlayer() }}
         {... { url, config }}
       />
-      <pre>{JSON.stringify(current)}</pre>
+      <pre>{JSON.stringify(subtitle)}</pre>
     </>
   )
 }

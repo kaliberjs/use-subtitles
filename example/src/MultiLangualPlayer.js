@@ -15,7 +15,7 @@ const languages = [
 
 export function MultiLangualPlayer() {
   const [language, setLanguage] = React.useState('nl')
-  const { ref, current } = useSubtitles({
+  const { ref, current: { subtitle }  } = useSubtitles({
     language
   })
 
@@ -40,7 +40,7 @@ export function MultiLangualPlayer() {
         <track src="./assets/audio-ja.vtt" kind="subtitles" srcLang="ja" />
         <track src="./assets/audio-nl.vtt" kind="subtitles" srcLang="nl" default />
       </audio>
-      <pre>{JSON.stringify(current)}</pre>
+      <pre>{JSON.stringify(subtitle)}</pre>
       <pre>Language: {language}</pre>{language}
     </>
   )

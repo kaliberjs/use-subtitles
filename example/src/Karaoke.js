@@ -8,11 +8,9 @@ const attributes = {
 }
 
 export function Karaoke() {
-  const { ref, current, tracks, metadata } = useSubtitles({
+  const { ref, current: { metadata, subtitle } } = useSubtitles({
     language: 'en'
   })
-
-  console.log({ current, tracks, metadata })
 
   return (
     <>
@@ -21,7 +19,24 @@ export function Karaoke() {
         <track src="./assets/audio.vtt" kind="subtitles" srcLang="en" default />
         <track src="./assets/karaoke.vtt" kind="metadata" srcLang="en" />
       </audio>
-      <pre>{JSON.stringify(current)}</pre>
+      <pre>
+        {highlight({ text: metadata.text, word: subtitle.text })}
+      </pre>
     </>
+  )
+
+  function highlight({ text, word }) {
+    return (text ?? '')
+      .split(' ')
+      .map(x => x === word ? <Accent>{x}</Accent> : x)
+      .join(' ')
+  }
+}
+
+function Accent({ children }) {
+  return (
+    <b style={{ color: 'red' }}>
+      {children}
+    </b>
   )
 }
