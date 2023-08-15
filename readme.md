@@ -90,11 +90,24 @@ The `useSubtitles` hook returns the following values:
 | Key            | Initial values | Description                                                                                                    |
 |-----------------| --- |---------------------------------------------------------------------------------------------------------------|
 | `subtitles`     | `[]` | An array of all subtitles available for the specified language.                                              |
-| `current`       | `{ [key]: null }` | An object representing the currently active subtitle, with properties `startTime`, `endTime`, `voice`[^1], and `text`. |
-| `tracks`       | `{ [key]: [] }` | An object keeping all collected subtitle tracks as state. |
+| `current`       | See below. | An object representing the currently active subtitle and metadata, with metadata containing the properties `startTime`, `endTime`, and `text`, and subtitle also containing `voice`[^1]. |
 | `ref`           | `{ current: null }` | A reference that should be attached to the player element ref attribute.                                    |
 
+#### The structure of the `current` object:
+
+```js
+{
+  subtitle: {
+    [key]: null
+  },
+  metadata: {
+    [key]: null
+  }
+}
+```
+
 [^1]: `voice` represents the current speakers' name.
+
 
 ## WebVTT
 A WebVTT file typically looks like this: 
@@ -120,6 +133,24 @@ WEBVTT
 00:00:12.500 --> 00:00:32.500
 <v Fred>OK, let’s go.
 ```
+
+## Metadata
+
+This hook also has the option to extract metadata; additional data to support the subtitles, but are not directly shown to the user. This accepts JSON (which it parses and returns), or a regular string.
+
+Example of a WebVTT metadata file (with `JSON`):
+
+```vtt
+WEBVTT
+
+00:00:00.000 --> 00:00:01.000
+{ "text": "Living on borrowed time", "color": "red" }
+
+00:00:01.000 --> 00:00:02.400
+{ "text": "the clock ticks faster.", "color": "red" }
+```
+
+Look at the `Karaoke` example for an implementation.
 
 #### Extracted properties
 `use-subtitles` extracts some of the available data from the cues. Here's an overview of _what_ it extracts, and how that is returned.
