@@ -3,7 +3,7 @@ import { initial, initialCurrentSubtitle } from './defaults';
 import { useCallbackRef } from "./machinery/useCallbackRef";
 import { useEvent } from "./machinery/useEvent";
 
-export function useSubtitles({ language = "nl" }) {
+export function useSubtitles({ language }) {
   const [subtitles, setSubtitles] = React.useState({ [language]: [] });
   const [metadata, setMetadata] = React.useState({ [language]: [] });
   const [currentSubtitle, setCurrentSubtitle] = React.useState({ [language]: initialCurrentSubtitle });
