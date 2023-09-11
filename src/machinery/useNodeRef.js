@@ -1,7 +1,7 @@
 /**
  * @param {Function} install 
- * @param {Array<any>} dependencies 
- * @returns {import('react').MutableRefObject}
+ * @param {import('react').DependencyList} dependencies 
+ * @returns {import('react').MutableRefObject<HTMLMediaElement>}
  */
 export function useNodeRef(install, dependencies) {
   const ref = React.useRef()
