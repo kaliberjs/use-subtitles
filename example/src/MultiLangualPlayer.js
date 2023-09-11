@@ -15,12 +15,14 @@ const languages = [
 
 export function MultiLangualPlayer() {
   const [language, setLanguage] = React.useState('nl')
-  const { ref, current: { subtitle }  } = useSubtitles({
+  const { ref, active: { subtitles }  } = useSubtitles({
     language
   })
 
   React.useEffect(
-    () => console.log(`MultiLanguagalPlayer src:`, ref.current.currentSrc),
+    () => {
+      console.log(`MultiLanguagalPlayer src:`, ref.current.currentSrc)
+    },
     []
   )
 
@@ -40,7 +42,7 @@ export function MultiLangualPlayer() {
         <track src="./assets/audio-ja.vtt" kind="subtitles" srcLang="ja" />
         <track src="./assets/audio-nl.vtt" kind="subtitles" srcLang="nl" default />
       </audio>
-      <pre>{JSON.stringify(subtitle)}</pre>
+      <pre>{JSON.stringify(subtitles)}</pre>
       <pre>Language: {language}</pre>{language}
     </>
   )

@@ -1,10 +1,10 @@
-export const initial = {
+export const metadataDefault = {
   startTime: null,
   endTime: null,
   text: null
 }
 
-export const initialCurrentSubtitle = {
-  ...initial,
+export const subtitlesDefault = {
+  ...metadataDefault,
   voice: null
 }

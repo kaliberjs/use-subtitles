@@ -12,9 +12,11 @@ const config = {
 }
 
 export function ReactPlayerComponent() {
+  const [isReady, setIsReady] = React.useState(false)
   const reactPlayerRef = React.useRef(null)
-  const { ref, current: { subtitle } } = useSubtitles({
-    language: 'en'
+  const { ref, active: { subtitles } } = useSubtitles({
+    language: 'en',
+    isReady
   })
 
   return (
@@ -22,10 +24,13 @@ export function ReactPlayerComponent() {
       <ReactPlayer
         controls
         ref={reactPlayerRef}
-        onReady={x => { ref.current = x.getInternalPlayer() }}
+        onReady={x => {
+          setIsReady(true)
+          ref.current = x.getInternalPlayer()
+        }}
         {... { url, config }}
       />
-      <pre>{JSON.stringify(subtitle)}</pre>
+      <pre>{JSON.stringify(subtitles)}</pre>
     </>
   )
 }

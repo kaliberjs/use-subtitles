@@ -8,7 +8,7 @@ const attributes = {
 }
 
 export function Karaoke() {
-  const { ref, subtitles, current: { metadata, subtitle } } = useSubtitles({
+  const { ref, active: { metadata, subtitles } } = useSubtitles({
     language: 'en'
   })
 
@@ -20,17 +20,12 @@ export function Karaoke() {
         <track src="./assets/karaoke.vtt" kind="metadata" srcLang="en" />
       </audio>
       <pre>
-        <span dangerouslySetInnerHTML={{
-          __html: highlight({ text: metadata.text, word: subtitle.text })
-        }} />
+        {metadata?.text?.split(' ').map((x, i) => (
+          <span key={i} style={{ color: x === subtitles?.text ? 'red' : 'black' }}>
+            {x}&emsp;
+          </span>
+        ))}
       </pre>
     </>
   )
-
-  function highlight({ text, word }) {
-    return (text ?? '')
-      .split(' ')
-      .map(x =>  x === word ? `<b style="color: red;">${x}</b>` : x)
-      .join(' ')
-  }
 }

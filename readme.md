@@ -27,9 +27,9 @@ Here's a short example demonstrating the most common use case.
 import { useSubtitles } from '@kaliber/use-subtitles'
 
 function Component() {
-  const { ref, current } = useSubtitles({
+  const { ref } = useSubtitles({
     language: "en"
-  });
+  })
 
   return (
     <video {... { ref }}>
@@ -61,10 +61,10 @@ const config = {
 }
 
 function Component() {
-  const reactPlayerRef = React.useRef(null);
+  const reactPlayerRef = React.useRef(null)
   const { current, ref } = useSubtitles({
     language: "en"
-  });
+  })
 
   return (
     <ReactPlayer
@@ -90,14 +90,15 @@ The `useSubtitles` hook returns the following values:
 | Key            | Initial values | Description                                                                                                    |
 |-----------------| --- |---------------------------------------------------------------------------------------------------------------|
 | `subtitles`     | `[]` | An array of all subtitles available for the specified language.                                              |
-| `current`       | See below. | An object representing the currently active subtitle and metadata, with metadata containing the properties `startTime`, `endTime`, and `text`, and subtitle also containing `voice`[^1]. |
+| `metadata`     | `[]` | An array of all metadata available for the specified language.                                              |
+| `active`       | See below. | An object representing the currently active subtitle and metadata, with metadata containing the properties `startTime`, `endTime`, and `text`, and subtitle also containing `voice`[^1]. |
 | `ref`           | `{ current: null }` | A reference that should be attached to the player element ref attribute.                                    |
 
-#### The structure of the `current` object:
+#### The structure of the `active` object:
 
 ```js
 {
-  subtitle: {
+  subtitles: {
     [key]: null
   },
   metadata: {

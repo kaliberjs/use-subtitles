@@ -8,12 +8,14 @@ const attributes = {
 }
 
 export function NativeVideoPlayer() {
-  const { ref, current: { subtitle } } = useSubtitles({
+  const { ref, active: { subtitles } } = useSubtitles({
     language: 'en'
   })
 
   React.useEffect(
-    () => console.log(`NativeVideoPlayer src:`, ref.current.currentSrc),
+    () => {
+      console.log(`NativeVideoPlayer src:`, ref.current.currentSrc)
+    },
     []
   )
 
@@ -23,7 +25,7 @@ export function NativeVideoPlayer() {
         <source type="audio/mp3" src="./assets/audio.mp3" />
         <track src="./assets/audio.vtt" kind="subtitles" srcLang="en" default />
       </video>
-      <pre>{JSON.stringify(subtitle)}</pre>
+      <pre>{JSON.stringify(subtitles)}</pre>
     </>
   )
 }

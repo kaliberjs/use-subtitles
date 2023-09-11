@@ -1,114 +1,102 @@
-import { getVoiceFromCue, isJSON, toIterable } from './machinery/utilities';
-import { initial, initialCurrentSubtitle } from './defaults';
-import { useCallbackRef } from "./machinery/useCallbackRef";
-import { useEvent } from "./machinery/useEvent";
-
-export function useSubtitles({ language }) {
-  const [subtitles, setSubtitles] = React.useState({ [language]: [] });
-  const [metadata, setMetadata] = React.useState({ [language]: [] });
-  const [currentSubtitle, setCurrentSubtitle] = React.useState({ [language]: initialCurrentSubtitle });
-  const [currentMetadata, setcurrentMetadata] = React.useState({ [language]: initial });
-
-  const onMetadataChangeEvent = useEvent(handleMetadataChange);
-  const onCueChangeEvent = useEvent(handleCueChange);
-  const onMountEvent = useEvent(handleInitialLoad);
-  const onUnmountEvent = useEvent(handleUnmount);
-
-  const memoizedMetadata = React.useMemo(() => metadata, [metadata]);
-  const memoizedSubtitles = React.useMemo(() => subtitles[language], [subtitles, language]);
-  const memoizedCurrentMetadata = React.useMemo(() => currentMetadata[language], [currentMetadata, language]);
-  const memoizedCurrentSubtitle = React.useMemo(() => currentSubtitle[language], [currentSubtitle, language])
-
-  const ref = useCallbackRef({
-    onMount: onMountEvent,
-    onUnmount: onUnmountEvent
+import { metadataDefault, subtitlesDefault } from './defaults'
+import { useNodeRef } from "./machinery/useNodeRef"
+import { toIterable } from './machinery/utilities'
+import converters from './machinery/converters'
+  
+export function useSubtitles({ language, isReady = undefined }) {
+  const [state, setState] = React.useState({
+    tracks: { [language]: { metadata: [], subtitles: [] } },
+    active: { [language]: { metadata: metadataDefault, subtitles: subtitlesDefault } }
   })
+
+  const ref = useNodeRef(
+    node => {
+      handleInitialLoad(node)
+    
+      return () => {
+        handleUnmount(node)
+      }
+    },
+   [isReady]
+  )
 
   /** @param {HTMLMediaElement} node */
   function handleInitialLoad(node) {
-    const tracks = toIterable(node?.textTracks)
+    if (!node) return
+
+    const tracks = toIterable(node.textTracks)
 
     // Set initial subtitles
-    node?.addEventListener('loadedmetadata', () => {
-      tracks.forEach((x) => {
-        const hasSubtitles = subtitles[language].length
-        const hasMetadata = metadata[language].length
-
-        if (!hasSubtitles && x.kind === 'subtitles') {
-          setInitialSubtitles(x)
-        }
-        
-        if (!hasMetadata && x.kind === 'metadata') {
-          setInitialMetadata(x)
-        }
-      })
+    node.addEventListener('loadedmetadata', () => {
+      tracks.forEach((x) => setInitialState(x) )
     })
 
     // Handle cue changes
-    tracks.forEach((x) => {
-      if (x.kind === 'subtitles') {
-        x.addEventListener("cuechange", onCueChangeEvent);
-      }
-      
-      if (x.kind === 'metadata') {
-        x.addEventListener("cuechange", onMetadataChangeEvent);
-      }
+    tracks.forEach((track) => {
+      // A track needs to be hidden in order to obtain its data.
+      track.mode = 'hidden'
 
-      x.mode = "hidden";
+      track.addEventListener("cuechange", () => {
+        handleActive(node, track)
+      })
     })
   }
-  
+
   /** @param {HTMLMediaElement} node */
   function handleUnmount(node) {
-    toIterable(node?.textTracks).forEach((x) => {
-      x.removeEventListener("cuechange", onCueChangeEvent);
+    if (!node) return
+
+    toIterable(node.textTracks).forEach((x) => { 
+      x.removeEventListener("cuechange", handleActive)
     })
   }
 
-  /** @param {{ language: string, cues: TextTrackCueList }} _ */
-  function setInitialSubtitles({ cues, language }) {
-    if (!subtitles.length && cues) {
-      setSubtitles(x => ({ ...x, [language]: toIterable(cues) }));
+  /** @param {{ kind: TextTrackKind, language: string, cues: TextTrackCueList }} _ */
+  function setInitialState({ kind, cues, language }) {
+    if (!state.tracks?.[language]?.[kind].length && cues) {
+      const data = toIterable(cues)
+
+      setState({ 
+        ...state,
+        tracks: {
+          ...state.tracks,
+          [language]: {
+            ...(state.tracks[language] ?? {}),
+            [kind]: data
+          }
+        }
+      })
     }
   }
 
-  /** @param {{ language: string, cues: TextTrackCueList }} _ */
-  function setInitialMetadata({ cues, language }) {
-    if (!metadata.length && cues) {
-      setMetadata(x => ({ ...x, [language]: toIterable(cues) }));
-    }
-  }
+  /** @param {HTMLMediaElement} node */
+  function handleActive(node, track) {
+    if (!node || track.language !== language) return
 
-  /** @param {{ target: { language: string, activeCues: TextTrackCueList } }} _ */
-  function handleMetadataChange({ target }) {
-    const [cue] = toIterable(target.activeCues).map(x => ({
-      text: isJSON(x.text) ? JSON.parse(x.text) : x.text,
-      startTime: x.startTime,
-      endTime: x.endTime
-    }))
+    const data = toIterable(node.textTracks).reduce(
+      (result, x) => ({ 
+        ...result, 
+        [x.language]: { 
+          ...(result[x.language] ?? {}),
+          [x.kind]: converters[x.kind](x) 
+        } 
+      }), 
+      {}
+    )
 
-    setcurrentMetadata(x => ({ ...x, [target.language]: cue ?? initial }))
-  }
- 
-  /** @param {{ target: { language: string, activeCues: TextTrackCueList } }} _ */
-  function handleCueChange({ target }) { 
-    const [cue] = toIterable(target.activeCues).map((x) => ({
-      text: x.getCueAsHTML().textContent,
-      voice: getVoiceFromCue(x.text),
-      startTime: x.startTime,
-      endTime: x.endTime
-    }))
-
-    setCurrentSubtitle(x => ({ ...x, [target.language]: cue ?? initialCurrentSubtitle }))
+    setState({
+      ...state,
+      active: data
+    })
   }
 
   return {
-    subtitles: memoizedSubtitles,
-    metadata: memoizedMetadata,
-    current: {
-      subtitle: memoizedCurrentSubtitle,
-      metadata: memoizedCurrentMetadata
+    subtitles: state.tracks[language]?.subtitles ?? [],
+    metadata: state.tracks[language]?.metadata ?? [],
+    active: {
+      subtitles: state.active[language]?.subtitles ?? subtitlesDefault,
+      metadata: state.active[language]?.metadata ?? metadataDefault
     },
     ref
-  };
+  }
 }

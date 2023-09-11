@@ -1,23 +1,19 @@
 /** @param {{ text: string }} _*/
 export function getVoiceFromCue({ text }) {
-  const match = /(<v (?<name>.+?)>)/.exec(text)
-  return match?.groups?.name ?? null
+  const match = /<v\s+(?<name>[^>]+)>/.exec(text)
+  return match?.groups?.name?.trim() ?? null
 }
 
 export function toIterable(x) {
-  return !x ? [] : [...x];
+  return !x ? [] : [...x]
 }
-
-export function noop(x) {
-  return null
-}
-
+ 
 export function isJSON(x) {
   try {
-    JSON.parse(x);
+    JSON.parse(x)
   } catch (e) {
-    return false;
+    return false
   }
 
-  return true;
+  return true
 }
