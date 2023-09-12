@@ -5,9 +5,14 @@ function convertToMetadata(track) {
   const activeCue = track.activeCues?.[0]
   if (!activeCue) return metadataDefault
 
+  let text = activeCue?.text ?? null
+
+  if (isJSON(activeCue?.text)) {
+    text = JSON.parse(activeCue?.text)
+  }
+
   return {
-    // TODO: Improve this line.
-    text: isJSON(activeCue?.text) ? JSON.parse(activeCue?.text) : (activeCue?.text ?? null),
+    text,
     startTime: activeCue?.startTime ?? null,
     endTime: activeCue?.endTime ?? null
   }
